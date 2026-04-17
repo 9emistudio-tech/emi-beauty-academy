@@ -1,38 +1,7 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>EMI Beauty Academy AI 助教</title>
-</head>
-<body>
-<h1>EMI Beauty Academy AI 助教</h1>
-<input id="question" type="text" placeholder="請輸入問題" style="width: 300px;" />
-<button onclick="askQuestion()">送出</button>
-<pre id="result"></pre>
-
-<script>
-async function askQuestion() {
-const question = document.getElementById("question").value;
-const resultEl = document.getElementById("result");
-
-resultEl.textContent = "讀取中...";
-
-try {
-const res = await fetch("/.netlify/functions/ask", {
+fetch("/.netlify/functions/ask", {
 method: "POST",
 headers: {
 "Content-Type": "application/json",
 },
 body: JSON.stringify({ question }),
-});
-
-const data = await res.json();
-resultEl.textContent = JSON.stringify(data, null, 2);
-} catch (error) {
-resultEl.textContent = "錯誤：" + error.message;
-}
-}
-</script>
-</body>
-</html>
+})
