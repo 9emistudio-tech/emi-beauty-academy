@@ -1,51 +1,72 @@
-exports.handler = async function(event, context) {
-if (event.httpMethod !== 'POST') {
-return { statusCode: 405, body: 'Method Not Allowed' };
+
+Aesthetics Emi <9emi.studio@gmail.com>
+下午8:42 (1 分鐘前)
+寄給 我
+
+exports.handler = async (event) => {
+try {
+const { question } = JSON.parse(event.body || "{}");
+
+if (!question) {
+return {
+statusCode: 400,
+body: JSON.stringify({ error: "缺少 question" }),
+};
 }
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const apiKey = process.env.GEMINI_API_KEY;
 
-try {
-const { question } = JSON.parse(event.body);
-
-const SYSTEM_PROMPT = `你是 EMI Beauty Academy 皮膚管理學科的專業助教。請根據講義知識用繁體中文回答學員問題，語氣專業易懂，直接提供知識不要說根據講義。
-
-皮膚三層：表皮、真皮、皮下組織。pH值5.5。角化週期28天。
-表皮五層：角質層、透明層（只手掌腳掌）、顆粒層、有棘層、基底層。
-皮脂膜：pH4.5-6.5弱酸性，天然屏障保濕。
-真皮層：膠原蛋白72%、玻尿酸（2%鎖住98%水分）、纖維芽細胞。
-膚質：乾性/油性/中性/敏感/混合。
-痘痘四階段：皮脂增多→毛囊阻塞→細菌繁殖→炎症。
-防曬：SPF針對UVB，PA針對UVA。
-MTS微針：0.25-1.5mm，術後24h不碰水。
-儀器：RF射頻、離子導入、小氣泡、超聲波、LED光療。`;
+if (!apiKey) {
+return {
+statusCode: 500,
+body: JSON.stringify({ error: "沒有讀到 GEMINI_API_KEY" }),
+};
+}
 
 const response = await fetch(
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
 {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"x-goog-api-key": apiKey,
+},
 body: JSON.stringify({
-contents: [{ parts: [{ text: SYSTEM_PROMPT + '\n\n學員問題：' + question }] }],
-generationConfig: { temperature: 0.3, maxOutputTokens: 800 }
-})
+contents: [
+{
+parts: [
+{
+text: `你是 EMI Beauty Academy 的皮膚管理學科 AI 助教。
+請用繁體中文回答。
+回答要清楚、簡潔、有條理。
+若問題不明確，請先根據問題本身給出最合理的解釋後再回答。
+
+使用者問題：
+${question}`,
+},
+],
+},
+],
+}),
 }
 );
 
 const data = await response.json();
-const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '暫時無法回覆。';
+
+const answer =
+data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+"抱歉，暫時無法取得回覆。";
 
 return {
 statusCode: 200,
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ answer: text })
+body: JSON.stringify({ answer }),
 };
-
 } catch (error) {
 return {
 statusCode: 500,
-body: JSON.stringify({ error: error.message })
+body: JSON.stringify({
+error: error.message || "伺服器錯誤",
+}),
 };
 }
 };
-
