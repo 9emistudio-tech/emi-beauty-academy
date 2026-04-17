@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMI Beauty Academy — 皮膚管理學科 AI 問答</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+.lock-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#faf7f2;font-family:"Noto Sans TC",sans-serif}
+.lock-box{background:white;border:1px solid rgba(201,169,110,0.25);border-radius:8px;padding:48px 40px;box-shadow:0 4px 24px rgba(26,20,16,0.08);width:100%;max-width:380px;text-align:center;margin:20px}
+.lock-logo{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:#c9a96e;margin-bottom:16px;display:block}
+.lock-title{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:28px;color:#1a1410;margin-bottom:6px}
+.lock-sub{font-size:12px;color:#9c8570;letter-spacing:0.08em;margin-bottom:36px}
+.lock-label{display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a96e;margin-bottom:10px;text-align:left}
+.lock-input{width:100%;border:1px solid rgba(201,169,110,0.35);border-radius:6px;padding:14px 16px;font-family:"Noto Sans TC",sans-serif;font-size:15px;font-weight:300;color:#1a1410;background:#faf7f2;outline:none;letter-spacing:0.12em;margin-bottom:16px;transition:border-color 0.2s,box-shadow 0.2s}
+.lock-input:focus{border-color:#c9a96e;box-shadow:0 0 0 3px rgba(201,169,110,0.12)}
+.lock-btn{width:100%;background:#1a1410;color:white;border:none;border-radius:6px;padding:14px;font-family:"Noto Sans TC",sans-serif;font-size:13px;letter-spacing:0.15em;cursor:pointer;transition:all 0.2s}
+.lock-btn:hover{background:#c9a96e}
+.lock-error{color:#c0392b;font-size:12px;margin-top:12px;letter-spacing:0.04em;min-height:18px}
+.lock-footer{margin-top:28px;font-size:11px;color:#9c8570;letter-spacing:0.06em}
+
+  :root{--cream:#faf7f2;--warm-white:#f5f0e8;--gold:#c9a96e;--dark:#1a1410;--mid:#5c4a38;--soft:#9c8570;--border:rgba(201,169,110,0.25);--shadow:rgba(26,20,16,0.08)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--cream);font-family:'Noto Sans TC',sans-serif;font-weight:300;color:var(--dark);min-height:100vh}
+  body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(ellipse at 20% 50%,rgba(201,169,110,0.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(201,169,110,0.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+  .container{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 20px}
+  header{padding:48px 0 32px;text-align:center;border-bottom:1px solid var(--border);margin-bottom:40px}
+  .logo-text{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(26px,5vw,36px);color:var(--dark);letter-spacing:0.05em;line-height:1.3;margin-bottom:10px}
+  .subtitle{font-size:12px;color:var(--soft);letter-spacing:0.12em}
+  .notice{background:linear-gradient(135deg,rgba(201,169,110,0.12),rgba(201,169,110,0.06));border:1px solid var(--border);border-radius:4px;padding:14px 20px;margin-bottom:32px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mid);letter-spacing:0.04em}
+  .notice-icon{width:18px;height:18px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+  .topics-section{margin-bottom:32px}
+  .section-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:400}
+  .topics-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .topic-chip{padding:7px 14px;border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--mid);cursor:pointer;transition:all 0.2s ease;background:white;letter-spacing:0.02em;font-family:'Noto Sans TC',sans-serif;font-weight:300}
+  .topic-chip:hover{background:var(--gold);color:white;border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,169,110,0.25)}
+  .input-section{margin-bottom:32px}
+  .input-wrapper{display:flex;align-items:flex-end;gap:12px}
+  textarea{flex:1;border:1px solid var(--border);border-radius:6px;padding:16px 18px;font-family:'Noto Sans TC',sans-serif;font-size:14px;font-weight:300;color:var(--dark);background:white;resize:none;min-height:64px;max-height:160px;line-height:1.6;transition:border-color 0.2s,box-shadow 0.2s;outline:none;letter-spacing:0.02em}
+  textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,0.1)}
+  textarea::placeholder{color:var(--soft);font-size:13px}
+  .send-btn{width:48px;height:48px;border-radius:6px;background:var(--dark);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+  .send-btn:hover{background:var(--gold);transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,169,110,0.3)}
+  .send-btn svg{width:18px;height:18px;fill:white}
+  .answer-container{display:none;animation:fadeIn 0.4s ease}
+  .answer-container.visible{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .question-display{background:var(--warm-white);border-left:2px solid var(--gold);padding:14px 18px;margin-bottom:20px;border-radius:0 4px 4px 0;font-size:13px;color:var(--mid);font-style:italic;font-family:'Noto Serif TC',serif;font-weight:300}
+  .answer-box{background:white;border:1px solid var(--border);border-radius:6px;padding:28px 28px 24px;margin-bottom:16px;box-shadow:0 2px 16px var(--shadow);font-size:14px;line-height:1.9;color:var(--dark);font-family:'Noto Serif TC',serif;font-weight:300;letter-spacing:0.04em}
+  .answer-box h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);margin-bottom:16px;font-weight:400;letter-spacing:0.06em}
+  .answer-box p{margin-bottom:12px}
+  .answer-box p:last-child{margin-bottom:0}
+  .answer-box ul,.answer-box ol{padding-left:20px;margin-bottom:12px}
+  .answer-box li{margin-bottom:6px}
+  .answer-box strong{color:var(--mid);font-weight:400}
+  .loading-box{background:white;border:1px solid var(--border);border-radius:6px;padding:32px 28px;display:flex;align-items:center;gap:16px;margin-bottom:16px}
+  .loading-dots{display:flex;gap:5px}
+  .loading-dots span{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:bounce 1.2s ease-in-out infinite}
+  .loading-dots span:nth-child(2){animation-delay:0.2s}
+  .loading-dots span:nth-child(3){animation-delay:0.4s}
+  @keyframes bounce{0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-6px);opacity:1}}
+  .loading-text{font-size:13px;color:var(--soft);letter-spacing:0.06em}
+  .answer-footer{display:flex;align-items:center;justify-content:space-between;padding:0 4px;margin-bottom:32px}
+  .answer-meta{font-size:11px;color:var(--soft);letter-spacing:0.08em}
+  .new-question-btn{font-size:12px;color:var(--gold);background:none;border:1px solid var(--border);padding:6px 14px;border-radius:20px;cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;font-family:'Noto Sans TC',sans-serif;font-weight:300}
+  .new-question-btn:hover{background:var(--gold);color:white;border-color:var(--gold)}
+  .out-of-scope{background:#f9f5f0;border:1px solid var(--border);border-radius:6px;padding:24px 28px;font-size:14px;color:var(--mid);line-height:1.8;margin-bottom:16px;font-family:'Noto Serif TC',serif}
+  .out-of-scope ul{padding-left:18px;margin-top:10px}
+  .out-of-scope li{margin-bottom:6px}
+  footer{border-top:1px solid var(--border);padding:24px 0 32px;text-align:center;margin-top:20px}
+  .footer-text{font-size:11px;color:var(--soft);letter-spacing:0.12em;line-height:1.8}
+  @media(max-width:480px){header{padding:32px 0 24px}.answer-box{padding:20px 18px}h1{font-size:22px}}
+
+</style>
+</head>
+<body>
+
+<div class="lock-wrap" id="lockScreen">
+  <div>
+    <div class="lock-box">
+      <span class="lock-logo">EMI Beauty Academy</span>
+      <h2 class="lock-title">皮膚管理學科</h2>
+      <p class="lock-sub">AI 知識問答系統</p>
+      <label class="lock-label">請輸入學員密碼</label>
+      <input class="lock-input" type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+      <button class="lock-btn" onclick="checkPw()">進入系統</button>
+      <p class="lock-error" id="pwErr"></p>
+    </div>
+    <p class="lock-footer">© EMI Beauty Academy · 僅供已註冊學員使用</p>
+  </div>
+</div>
+
+<div id="mainSystem" style="display:none">
+
+<div class="container">
+  <header>
+    <span class="logo-text">EMI Beauty Academy</span>
+    <h1>皮膚管理學科<br><em style="font-size:0.75em;color:var(--soft)">AI 知識問答</em></h1>
+    <p class="subtitle">輸入關鍵字或問題，即時從講義內容獲得解答</p>
+  </header>
+
+  <div class="notice">
+    <div class="notice-icon">i</div>
+    <span>本系統僅供已註冊學員使用，問答內容來自皮膚管理學科講義，版權歸屬 EMI Beauty Academy 所有。</span>
+  </div>
+
+  <div class="topics-section">
+    <p class="section-label">常見主題</p>
+    <div class="topics-grid">
+      <button class="topic-chip" onclick="setQ('皮膚的三層結構')">皮膚三層結構</button>
+      <button class="topic-chip" onclick="setQ('表皮層有哪幾層')">表皮層結構</button>
+      <button class="topic-chip" onclick="setQ('皮脂膜功能')">皮脂膜</button>
+      <button class="topic-chip" onclick="setQ('黑頭粉刺和皮脂管絲的分別')">黑頭 vs 皮脂管絲</button>
+      <button class="topic-chip" onclick="setQ('UVA和UVB的分別')">UVA / UVB</button>
+      <button class="topic-chip" onclick="setQ('乾性油性混合性肌膚特徵保養')">膚質分類</button>
+      <button class="topic-chip" onclick="setQ('膠原蛋白玻尿酸作用')">膠原蛋白 玻尿酸</button>
+      <button class="topic-chip" onclick="setQ('MTS微針功效注意事項')">MTS 微針</button>
+      <button class="topic-chip" onclick="setQ('神經醯胺作用')">神經醯胺</button>
+      <button class="topic-chip" onclick="setQ('角化過程週期')">角化週期</button>
+      <button class="topic-chip" onclick="setQ('痘痘形成的階段')">痘痘形成</button>
+      <button class="topic-chip" onclick="setQ('SPF和PA的意思')">SPF / PA 防曬</button>
+      <button class="topic-chip" onclick="setQ('毛孔粗大類型')">毛孔粗大</button>
+      <button class="topic-chip" onclick="setQ('保養品成分表怎麼看')">成分表解讀</button>
+      <button class="topic-chip" onclick="setQ('皮膚管理儀器原理')">儀器原理</button>
+      <button class="topic-chip" onclick="setQ('酒糟性皮膚炎')">酒糟肌</button>
+    </div>
+  </div>
+
+  <div class="input-section">
+    <p class="section-label">輸入你的問題</p>
+    <div class="input-wrapper">
+      <textarea id="qi" placeholder="例如：基底層的功能是什麼？或 敏感性肌膚如何保養？" rows="2" onkeydown="handleKey(event)"></textarea>
+      <button class="send-btn" onclick="ask()" title="送出">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="answer-container" id="ac">
+    <div class="question-display" id="qd"></div>
+    <div id="ans"></div>
+    <div class="answer-footer" id="af" style="display:none">
+      <span class="answer-meta">資料來源：皮膚管理學科講義 · EMI Beauty Academy</span>
+      <button class="new-question-btn" onclick="reset()">再問一題</button>
+    </div>
+  </div>
+
+  <footer>
+    <p class="footer-text">© EMI Beauty Academy · 皮膚管理學科講義<br>本講義請勿抄襲、翻版、翻印、修改、複製、擷取、重製、改作</p>
+  </footer>
+</div>
+
+<script>
+const KB=[
+{k:["皮膚結構","三層","表皮","真皮","皮下","皮膚組成","皮膚主要","主要結構","皮膚是"],t:"皮膚的主要三層結構",a:`皮膚是人體最大器官，面積約1.6–2㎡，重量佔體重約16%，厚度0.3–4mm，<strong>pH值約5.5（弱酸性）</strong>。<br><br>皮膚由三層組成：<ul><li><strong>表皮層</strong>：最外層，主要由角質細胞組成，沒有血管，不會流血，但有感覺神經末梢。</li><li><strong>真皮層</strong>：含汗腺、皮脂腺、毛囊、血管、神經、淋巴管，是皮膚的「運輸區」，佔皮膚總厚度約95%。</li><li><strong>皮下組織</strong>：主要由脂肪細胞組成，連接皮膚與肌肉，有儲存脂肪、減震、保溫功能。護膚品無法到達這一層。</li></ul>附屬物包括：毛囊、皮脂腺、汗腺和豎毛肌。`},
+{k:["皮膚功能","八大功能","保護作用","分泌作用","調溫","排泄","感知","合成","再生修復"],t:"皮膚的八大功能",a:`<ol><li><strong>保護作用</strong>：防外界刺激（機械、化學、微生物、紫外線），防止體內水分流失</li><li><strong>分泌作用</strong>：分泌皮脂和汗液，弱酸性皮脂防乾燥和抑菌</li><li><strong>調溫作用</strong>：熱時出汗降溫，冷時收縮立毛肌</li><li><strong>儲蓄作用</strong>：儲存皮下脂肪</li><li><strong>排泄作用</strong>：從汗腺排出體內廢物</li><li><strong>感知作用</strong>：觸覺、疼痛、溫度、瘙癢</li><li><strong>合成作用</strong>：合成膽固醇及Vitamin D3（經紫外線照射）</li><li><strong>再生修復作用</strong>：受傷時皮膚組織增殖修復</li></ol>`},
+{k:["角化","角質","週期","28天","更新","新陳代謝","基底層到角質層","角化過程","代謝"],t:"角化過程與皮膚更新週期",a:`角化過程是角質細胞從基底層出生，逐步移動到角質層並脫落的過程，整個週期約 <strong>28天</strong>。<ul><li>基底層 → 顆粒層：約14天</li><li>顆粒層 → 角質層脫落：約14天</li></ul>注意事項：<ul><li>老年人代謝週期更長</li><li>手掌和腳底約需45天</li><li>銀屑病（乾癬）患者的週期可短至4–5天</li><li>若代謝延遲，舊角質不易剝落，角質層變厚，保養品無法充分吸收</li></ul>`},
+{k:["表皮層","五層","角質層","透明層","顆粒層","有棘層","基底層","表皮結構","薄皮膚","厚皮膚","幾層"],t:"表皮層的五層結構",a:`表皮由五層組成（由外到內）：<ol><li><strong>角質層（Stratum Corneum）</strong>：最外層，10–20層扁平死細胞，厚度約0.02mm，含角蛋白、天然保濕因子（NMF）。兩大功能：防異物進入、保持水分不蒸發。</li><li><strong>透明層（Stratum Lucidum）</strong>：只存在於手掌和腳掌（厚皮膚），4–6層透明扁平死細胞，緩衝物理刺激、防微生物入侵。</li><li><strong>顆粒層（Stratum Granulosum）</strong>：2–5層，含神經醯胺，維持屏障功能，是有生命細胞→死角質細胞的第一階段。</li><li><strong>有棘層（Stratum Spinosum）</strong>：表皮中最厚（5–10層），含蘭格罕氏免疫細胞，有淋巴液供給表皮營養。</li><li><strong>基底層（Stratum Basale）</strong>：又稱生發層，細胞分裂活躍，含水量最高（約70%），每10個基底細胞有1個黑色素細胞。</li></ol><p style="font-size:12px;color:#9c8570">注意：多數教科書只列四層（不含透明層），透明層只在手掌腳掌出現。</p>`},
+{k:["基底層","生發層","黑色素細胞","Merkel","指紋","基底細胞","stratum basale"],t:"基底層（Stratum Basale）",a:`基底層又稱<strong>生發層</strong>，是表皮最深的一層：<ul><li>細胞分裂最活躍，不斷產生新細胞向上推移</li><li>細胞內含水量最高（約70%），水分由真皮血管供應</li><li>每10個基底細胞中有1個<strong>黑色素細胞（melanocyte）</strong>，分泌黑色素保護細胞核不受紫外線傷害</li><li>含<strong>Merkel細胞</strong>（觸覺受器，手腳表面特別多）</li><li>指紋的形成與真皮乳頭的皺摺有關，每人獨一無二，不會隨年老改變</li></ul>`},
+{k:["皮脂膜","sebum barrier","皮膜","酸鹼","屏障","皮膚屏障","受損","修復皮脂膜","去角質頻率","破壞皮脂膜"],t:"皮脂膜（Sebum Barrier）",a:`皮脂膜是覆蓋在角質層表面的保護膜（不是皮膚的結構），由<strong>皮脂（油分）＋汗液（水分）</strong>融合而成，pH約4.5–6.5（弱酸性）。<br><br><strong>皮脂膜受損的徵兆：</strong><ul><li>洗臉後乾澀、緊繃、粗糙</li><li>乾燥、搔癢、脫屑</li><li>嚴重時紅腫、敏感、發癢</li><li>過度刺激反而油脂旺盛，長痘痘粉刺</li></ul><strong>會破壞皮脂膜的行為：</strong><ul><li>①過度清潔（使用鹼性/泡沫豐富洗面乳）</li><li>②頻繁去角質</li><li>③年齡增長（25歲後皮脂膜逐漸變薄）</li><li>④忽略防曬（UVB直接破壞皮脂膜）</li><li>⑤護膚品使用不當（激素、鉛汞、鹼性產品）</li></ul><strong>各膚質去角質建議頻率：</strong><ul><li>中性肌：最多每月1次</li><li>乾性肌：最多每2個月1次</li><li>油性肌：最多每2星期1次</li><li>混合性肌：最多每2星期1次</li><li>敏感性肌：最好不要去角質</li></ul><strong>修復方法：</strong>選弱酸性清潔品、不過度去角質、避免酒精/香精/高溫熱水、做好防曬保濕，可用含<strong>角鯊烯、神經醯胺、洋甘菊</strong>的產品。`},
+{k:["真皮層","dermis","乳狀層","網狀層","真皮結構","膠原纖維","彈力纖維","纖維芽細胞","基質","真皮"],t:"真皮層的結構",a:`真皮層厚度約0.3–3mm，佔皮膚總厚度約95%，背部真皮最厚。<br><br>分為兩層：<ul><li><strong>乳狀層</strong>：膠原蛋白＋彈性蛋白形成鬆散網狀，含微血管、神經，負責表皮養分輸送。形成真皮乳頭（即指紋）。</li><li><strong>網狀層</strong>：緊密不規則組織，增加皮膚強韌性。年齡增大失去彈性時，產生深層皺紋。</li></ul><strong>真皮層關鍵成分：</strong><ul><li><strong>膠原蛋白</strong>：佔皮膚72%，真皮80%，鎖水支撐皮膚</li><li><strong>玻尿酸（HA）</strong>：2%可鎖住98%水分，隨年齡減少</li><li><strong>膠原纖維</strong>：維持皮膚張力與飽滿度</li><li><strong>彈力纖維</strong>：決定肌膚彈力和緊緻</li><li><strong>纖維芽細胞</strong>：合成膠原蛋白、彈性蛋白、玻尿酸</li><li><strong>基質</strong>：果凍狀，1g可容納6L水</li></ul>`},
+{k:["膠原蛋白","玻尿酸","透明質酸","HA","collagen","膠原","彈力蛋白"],t:"膠原蛋白與玻尿酸",a:`<strong>膠原蛋白（Collagen）</strong><ul><li>佔皮膚72%，真皮層80%是膠原蛋白</li><li>在皮膚中構成細密的彈力網，能鎖住水分，如支架般支撐皮膚</li><li>提供皮膚收縮強度，有修補組織的作用</li><li>與水結合保持皮膚水分</li></ul><strong>玻尿酸（透明質酸 HA）</strong><ul><li>學名透明質酸，是一種天然多醣體</li><li><strong>2%的玻尿酸可以鎖住98%的水分</strong></li><li>存在於真皮層，含量隨年齡增加而減少，導致肌膚乾燥老化</li><li>具有強大吸水作用，維持皮膚彈性</li></ul><strong>兩者差異：</strong>膠原蛋白主要提供支撐和結構，玻尿酸主要負責保濕鎖水。兩者共同維持皮膚的飽滿、緊緻和彈性。`},
+{k:["膚質","乾性","油性","中性","敏感","混合","膚質分類","皮膚類型","膚質判斷","如何保養"],t:"膚質分類與保養建議",a:`<strong>五種膚質特徵與保養：</strong><ul><li><strong>乾性肌</strong>：皮脂分泌少，易乾燥緊繃脫皮，黯淡無光，有黑斑皺紋，少痘痘。→ 溫和清潔＋補水保濕，最後用乳霜鎖水</li><li><strong>油性肌</strong>：皮脂分泌旺盛，毛孔粗大，易生痘痘粉刺，但不易有皺紋。→ 每天洗臉2–3次，油水平衡，避免刺激性食物</li><li><strong>中性肌</strong>：油水最平衡，最理想，多見於嬰幼兒及青春期前。→ 只需基礎清潔和保濕</li><li><strong>敏感性肌</strong>：易因外界刺激出現短暫紅腫、灼熱、緊繃、刺痛。→ 避開刺激成分，選天然植萃，查EWG分數</li><li><strong>混合性肌</strong>：T字出油＋兩頰乾燥。→ 分區保養，T字控油，兩頰加強保濕</li></ul>`},
+{k:["皮脂腺","皮脂","sebum","皮脂分泌","皮脂作用","皮脂腺作用","出油"],t:"皮脂腺與皮脂",a:`皮脂腺除手掌腳掌外幾乎遍布全身，頭面部最多。分泌受<strong>雄性激素和腎上腺皮質激素</strong>控制，青春期分泌活躍，35歲後逐漸減少。<br><br><strong>皮脂的三大作用：</strong><ul><li><strong>滋潤皮膚毛髮</strong>：離開皮脂的滋養，皮膚會變粗糙開裂，毛髮乾枯</li><li><strong>鎖住肌膚水分</strong>：在表皮形成乳化皮脂膜，防止水分過度蒸發</li><li><strong>殺菌</strong>：弱酸性皮脂抑制和殺滅皮膚表面細菌</li></ul>皮脂分泌過多 → 毛孔堵塞、痤瘡、脂漏性皮炎。皮脂分泌過少 → 皮膚乾燥、瘙癢、頭屑。`},
+{k:["黑頭","白頭","粉刺","皮脂管絲","開放性粉刺","閉鎖性粉刺","comedo","sebaceous"],t:"粉刺與皮脂管絲的分別",a:`<strong>皮脂管絲（Sebaceous Filaments）</strong><ul><li>呈透明、灰色或黃色</li><li>是皮脂腺的<strong>正常分泌物</strong>，位於毛囊深處</li><li>引導毛孔裡的油脂沿管道流動</li><li>通常<strong>不需積極治療</strong></li></ul><strong>黑頭粉刺（開放性粉刺）</strong><ul><li>明顯髒物堵在毛孔表面</li><li>黑色是接觸空氣氧化的黑，不是臉沒洗乾淨</li><li>除皮脂過多，還有角質代謝異常，需要治療</li></ul><strong>白頭粉刺（閉鎖性粉刺）</strong><ul><li>看不見開口，皮脂和角質堵塞毛孔</li><li>形成未氧化的白色堆積物</li></ul><p>很多人用黏膠撕拔的「條狀物」其實是皮脂管絲，並非黑頭粉刺。</p>`},
+{k:["痘痘","痤瘡","丘疹","膿包","囊腫","結節","痘痘形成","痘痘原因","痘痘種類","青春痘","長痘"],t:"痘痘的形成與種類",a:`<strong>痘痘形成的四個階段：</strong><ol><li><strong>皮脂分泌增多</strong>：雄性激素刺激皮脂腺增生，分泌過多皮脂</li><li><strong>毛囊口角化阻塞</strong>：毛囊開口角質異常，皮脂無法正常排出，形成脂栓（粉刺）</li><li><strong>痤瘡丙酸桿菌繁殖</strong>：毛孔缺氧，厭氧菌大量繁殖，分解油脂產生游離脂肪酸</li><li><strong>炎症反應</strong>：游離脂肪酸刺激毛囊周圍，出現紅腫、丘疹、膿皰</li></ol><strong>痘痘的種類：</strong><ul><li><strong>粉刺</strong>：毛囊被塞但未發炎（黑頭＝開放，白頭＝閉鎖）</li><li><strong>丘疹</strong>：無膿液的紅色小痘痘</li><li><strong>膿包</strong>：有膿液，容易留痘印，切勿擠壓</li><li><strong>囊腫</strong>：大顆硬，有明顯痛感，容易留疤</li><li><strong>結節</strong>：發炎深至真皮層，留疤率最高</li></ul>`},
+{k:["毛孔","毛孔粗大","毛孔類型","出油型","角質型","缺水型","老化型"],t:"毛孔粗大的四種類型",a:`<ol><li><strong>出油型毛孔</strong>：皮脂分泌旺盛撐大毛孔，呈U形擴大，常發生在T字出油部位。</li><li><strong>角質型毛孔</strong>：清潔不徹底，角質層肥厚阻塞，呈細小密集，常發生在鼻子和臉頰兩側，易有黑頭或閉鎖粉刺。</li><li><strong>缺水型毛孔</strong>：皮膚過乾使毛孔明顯，呈橢圓形擴大，常發生在臉頰兩側。</li><li><strong>老化型毛孔</strong>：膠原蛋白和彈力蛋白流失，地基鬆掉，毛孔呈水滴狀或長條狀，常發生在蘋果肌、法令紋附近。</li></ol>日曬是導致老化型毛孔的最大元兇。`},
+{k:["痘疤","痘印","凹洞","紅疤","褐疤","疤痕","凸疤","蟹足腫","痘坑"],t:"痘斑與痘疤",a:`<strong>紅疤</strong>：痘痘發炎過程過度血管擴張，痘痘好後仍持續呈現紅色。<br><strong>褐疤</strong>：發炎波及黑色素細胞，表皮或真皮黑色素增加，呈深色。<br><br>改善方法：做好防曬、使用美白產品或果酸煥膚療程。<br><br><strong>凹痘疤（萎縮型疤痕）</strong>：嚴重青春痘破壞真皮層，形成凹洞。類型：<ul><li>碟型（M型/波浪型）</li><li>車廂型（U型）</li><li>冰鑿型（V型）</li></ul><strong>凸痘疤</strong>：傷口過度增生，膠原蛋白累積過多向外凸起。嚴重者為蟹足腫，會擴散至附近區域。`},
+{k:["紫外線","UV","UVA","UVB","UVC","日曬","曬傷","曬黑","曬老","紫外線分別"],t:"紫外線 UVA / UVB / UVC",a:`<strong>UVA（320–400nm）= AGING（老化）</strong><ul><li>佔到達地面紫外線約90%</li><li>穿透力強，可深入<strong>真皮層</strong></li><li>導致曬黑、老化、斑點、皺紋、鬆弛</li><li>即使陰天或隔著窗玻璃仍然存在</li><li>累積性傷害，長期影響最大</li></ul><strong>UVB（280–320nm）= BURN（曬傷）</strong><ul><li>只到達<strong>表皮層</strong></li><li>造成即時曬傷、曬紅、脫皮、皮膚癌</li><li>曬紅作用是UVA的1000倍</li><li>可促進皮膚合成維生素D</li></ul><strong>UVC（100–280nm）</strong><ul><li>大部分被臭氧層阻隔，基本不到達地面</li><li>近年因臭氧層破壞，潛在風險逐漸增強</li></ul>`},
+{k:["防曬","SPF","PA","防曬霜","防曬指數","物理防曬","化學防曬","防曬成分","SPF意思","PA意思"],t:"防曬指數 SPF / PA 與防曬種類",a:`<strong>SPF（Sun Protection Factor）</strong>：針對UVB的防護<ul><li>數字2–50+，越高越強</li><li>SPF15＝阻擋14/15的UVB，延長15倍曬傷時間</li><li>SPF30＝阻擋29/30的UVB</li></ul><strong>PA（Protection Grade of UVA）</strong>：針對UVA的防護<ul><li>PA+＝延緩2–4倍曬黑時間</li><li>PA++＝延緩4–8倍</li><li>PA+++＝延緩8倍以上</li><li>PA++++＝最高防護（最多4個加號）</li></ul><strong>物理性防曬</strong>：成分為二氧化鈦（TiO2）、氧化鋅（ZnO），利用反射折射阻擋紫外線。優點：立即有效、不易致敏、適合敏感肌。缺點：容易泛白、質地偏厚。<br><br><strong>化學性防曬</strong>：吸收紫外線轉化為熱能。優點：質地輕透、適合油性肌。缺點：有滲入皮膚風險、可能刺激敏感肌。`},
+{k:["保養品成分","成分表","成分規則","INCI","EWG","防腐劑","乳化劑","增稠劑","活性成分","成分怎麼看","看成分"],t:"保養品成分表解讀",a:`<strong>成分表規則（法規要求）：</strong><ul><li>成分依含量由高到低排列</li><li>大於1%的成分必須照順序排列</li><li>小於1%的成分可在後面任意排列</li><li>著色劑不論多寡，都列在最後</li></ul><strong>常見成分類型：</strong><ol><li><strong>水</strong>：化妝水中佔比常達70%以上</li><li><strong>保濕劑</strong>：鎖水保濕，如甘油、玻尿酸</li><li><strong>油脂</strong>：天然（植物萃取）或合成（矽靈/礦物油）</li><li><strong>乳化劑</strong>：使油水混合穩定</li><li><strong>活性成分</strong>：美白、防曬、抗痘等功效性成分</li><li><strong>增稠劑</strong>：調節稠度</li><li><strong>安定劑/抗氧化劑</strong>：如維他命E</li><li><strong>防腐劑</strong>：如苯氧基乙醇、Parabens</li></ol><strong>重要標示符號：</strong><ul><li>PAO符號（如24M）：開封後可保存的月數</li><li>EWG分數：數字越小代表越安全</li><li>ECOCERT：有機產品認證</li></ul>`},
+{k:["功效成分","神仙組合","避雷","維C","視黃醇","煙醯胺","神經醯胺","水楊酸","果酸","角鯊烷","成分搭配","保養品成分種類"],t:"常見功效成分與搭配建議",a:`<strong>抗敏修復類：</strong>金盞花（鎮定消炎）、維生素B5/泛醇（止癢抗敏）、角鯊烷（修復屏障）、蝦青素（抗氧化）、神經醯胺（保護屏障）<br><br><strong>保濕補水類：</strong>馬齒莧（舒敏保濕）、輔酶Q10（抗氧保濕）、甘油（長效補水）、玻尿酸（補水保濕）、氨基酸（保濕鎖水）<br><br><strong>去痘控油類：</strong>壬二酸（抗炎祛痘）、水楊酸（剝脫角質、疏通毛孔）、尿囊素（祛痘修復）、果酸（淡斑祛痘）<br><br><strong>抗衰抗老類：</strong>視黃醇/維A、酵母（預防皺紋）、維E（延緩衰老）、胜肽（緊緻肌膚）<br><br><strong>✓ 神仙好組合：</strong><ul><li>煙醯胺＋視黃醇：美白亮膚</li><li>維C＋維E：雙重抗氧化</li><li>視黃醇＋玻尿酸：保濕抗老</li><li>視黃醇＋神經醯胺：強化去皺</li></ul><strong>✗ 避雷組合（不能混用）：</strong><ul><li>煙醯胺＋維C（高濃度）→ 可能產生煙酸刺激</li><li>酸性成分＋酸性成分 → 破壞肌膚屏障</li><li>蛋白質＋酒精 → 破壞蛋白質活性</li><li>煙醯胺＋強酸 → 刺激肌膚</li></ul>`},
+{k:["神經醯胺","ceramide","屏障成分","保濕成分"],t:"神經醯胺（Ceramide）",a:`神經醯胺是顆粒層和角質層中的重要脂質，是<strong>皮膚屏障功能的核心成分</strong>。<ul><li>形成細胞間脂質，將角質細胞牢固接合在一起</li><li>防止細胞內天然保濕因子（NMF）流失</li><li>維持皮膚保水能力</li><li>異位性皮膚炎患者皮膚屏障異常，現認為與神經醯胺減少有關</li><li>健康角質層含水量約20–30%，有賴神經醯胺的作用</li></ul>護膚品中含有神經醯胺，可修復肌膚屏障、保濕補水、抗衰，特別適合敏感肌和乾性肌使用。`},
+{k:["儀器","皮膚管理儀器","離子導入","超聲波","射頻","RF","小氣泡","注氧","冷導頭","熱噴","角質鏟","LED","光療","光譜儀","鱷魚夾","MTS儀器"],t:"皮膚管理儀器原理",a:`<ul><li><strong>冷導頭</strong>：低溫讓皮膚血管收縮，改善泛紅、舒緩皮膚</li><li><strong>射頻儀（RF）</strong>：無線電波打進皮膚，刺激膠原蛋白增生，緊緻皮膚</li><li><strong>角質鏟</strong>：震頻清除臉上老廢角質</li><li><strong>離子導入</strong>：微電流同極相斥異極相吸，促進有效成分滲透皮膚。適合液體劑型，乳液和霜狀類不帶電效果差</li><li><strong>鱷魚夾</strong>：生物微電流將面膜營養成分快速導入</li><li><strong>小氣泡</strong>：真空負壓，深層清潔毛孔老廢角質</li><li><strong>注氧儀</strong>：壓力將化妝水或精華變成細小噴霧，分子變小更易吸收</li><li><strong>MTS微針</strong>：微小針頭製作大量微細管道，促膠原蛋白增生，導入精華</li><li><strong>超聲波導入</strong>：每秒百萬次震動，保養成分震碎成更小分子帶到深層</li><li><strong>熱噴</strong>：打開毛孔，利於產品吸收和深層清潔</li></ul><strong>LED光療波長：</strong><ul><li>紅光660nm：改善微循環、緊緻、促細胞再生</li><li>黃光590nm：美白、抑黑色素、淡斑</li><li>藍光415nm：殺痘菌、控油、鎮定</li><li>綠光560nm：舒緩敏感肌</li><li>橘光610nm：促循環、加速代謝</li><li>紫光308nm：改善暗瘡、促修復</li></ul>`},
+{k:["MTS","微針","中胚層","微晶","Dr.Pen","Hydra Pen","出針","針深","藻針","海藻針","微針功效","微針注意"],t:"MTS 微針療法",a:`MTS（Microneedle Therapy System）又稱中胚層美容，利用微小針頭刺激皮膚，促進膠原蛋白增生，大幅提升活性成分滲透力（一般塗抹只有0.3%效果，MTS可製作200,000個微細管道）。<br><br><strong>出針深度建議：</strong><ul><li>0.25mm：日常護膚美白保濕</li><li>0.5–1.0mm：收縮毛孔、細紋、淡斑、紅血絲</li><li>1.0–1.5mm：痘痘肌、痘印</li><li>0.3–0.7mm：老化肌膚</li></ul><strong>施作後注意事項：</strong><ul><li>有針作法24小時不能洗臉（只能用食鹽水）</li><li>天天防曬＋做好保濕（修護面膜/修護霜）</li><li>兩周內不去角質、不做高溫、不擦酸、不做雷射</li><li>脫皮結痂讓自然脫落，不要撕</li><li>術後1–3天出現紅腫、脫皮、緊繃、粉刺均屬正常（正常肌膚3–7天修復，敏感肌7–10天）</li></ul><strong>禁忌族群：</strong>皮膚敏感、糖尿病、高血壓、孕婦、凝血疾病、蟹足腫體質、對金屬過敏。`},
+{k:["顧客服務","SOP","皮膚分析","問診","目診","觸診","接待","客戶","接客","標準流程"],t:"顧客服務 SOP 標準流程",a:`<strong>接待顧客五大標準流程：</strong>進行皮膚分析 → 觀察皮膚皮脂 → 判斷肌膚類型 → 分析皮膚問題 → 決定優先解決哪些問題<br><br><strong>皮膚分析三步驟：</strong><ol><li><strong>問診</strong>：職業、生活習慣、護膚習慣、使用哪些保養品、生理期、孕育期、過敏史、用藥、健康狀況、近期是否做過醫美</li><li><strong>目診</strong>：觀察痘痘、粉刺、紅血絲、斑點、毛孔粗大、暗沉、敏感等</li><li><strong>觸診</strong>：感受皮膚彈性、厚度、粗糙度</li></ol><strong>皮膚問題優先解決順序：</strong><ol><li>先解決皮膚敏感、發炎（激素臉）</li><li>再祛痘，之後改善痘坑、痘印、毛孔粗大</li><li>曬傷曬黑先改善曬傷，皮膚恢復健康後再做美白管理</li></ol>`},
+{k:["酒糟","玫瑰斑","rosacea","酒糟性皮膚炎","酒糟肌","紅血絲","紅斑","血管擴張"],t:"酒糟性皮膚炎（Rosacea）",a:`酒糟性皮膚炎又稱玫瑰斑、酒糟肌，是慢性皮膚發炎，主要為血管擴張及皮脂腺肥大。<br><br><strong>四期表現：</strong><ol><li>臉部偶發性紅斑，幾小時至幾天後褪去</li><li>微血管擴張，紅斑不再褪去（有點像紅斑性狼瘡）</li><li>出現丘疹、膿皰（類似青春痘，<strong>但不會有粉刺</strong>）</li><li>鼻子變大變形、眼睛乾澀視力模糊、水腫</li></ol><strong>常見惡化因子：</strong>過熱環境、陽光曝曬、熱飲（咖啡茶）、辣食、酒精、激烈運動、壓力、皮膚屏障受損<br><br><strong>8個預防撇步：</strong>防曬、降壓力、避免體溫過高、簡化保養、清淡飲食、避免過熱飲料、限制酒精攝取、避免皮膚吹風或寒冷環境`},
+{k:["接觸性皮膚炎","過敏","皮疹","濕疹","刺激性","光毒性","皮膚過敏"],t:"接觸性皮膚炎",a:`<strong>三種類型：</strong><ul><li><strong>刺激性</strong>：由刺激物質直接引起，反應發生在接觸部位</li><li><strong>過敏性</strong>：由致敏物質引起，可能擴散到接觸部位以外</li><li><strong>光毒性/光過敏性</strong>：物質接觸後暴露於紫外線產生反應</li></ul><strong>常見致敏物質：</strong>植物（毒藤）、橡膠/乳膠、抗菌藥、香水、防腐劑、鎳和鈷等金屬<br><br><strong>症狀：</strong>紅斑、瘙癢、丘疹、水皰；慢性者可能出現苔蘚化斑塊、結痂<br><br><strong>注意事項：</strong>沐浴水溫適中、選不含刺激性物質的清潔品、每週熱水清洗寢具、使用化學藥劑戴手套`},
+{k:["糖化","氧化","老化","AGE","自由基","抗老","肌老化","皮膚老化","抗糖化","抗氧化"],t:"肌膚老化——糖化與氧化",a:`<strong>糖化（Glycation）</strong>：過量的糖與體內蛋白質結合，產生AGE（晚期糖基化終產物），導致膠原蛋白劣化，出現皺紋、鬆弛、蠟黃暗沉。<br><br>如何抗糖化：不攝取過量糖份、多攝取預防糖化食物、先吃低升糖食物、良好睡眠品質、確實做好防曬<br><br><strong>氧化（Oxidation）</strong>：自由基攻擊皮膚細胞，導致斑點、皺紋、衰老。吸菸、空氣污染、紫外線、壓力都會增加自由基。<br><br>如何抗氧化：防止紫外線、進行適度運動、避免飲酒吸煙、補充抗氧化劑（維C、維E）、多吃抗氧化食物`},
+{k:["蠕形蟎蟲","蟎蟲","毛囊蟲","demodex","毛囊蠕形蟎","皮脂蠕形蟎"],t:"蠕形蟎蟲（Demodex Mites）",a:`蠕形蟎蟲是生長在毛囊皮脂腺的微小節肢動物，寄生在人體的有兩種：<ul><li><strong>毛囊蠕形蟎（Demodex folliculorum）</strong>：生長在毛囊，尾巴鈍如手指狀</li><li><strong>皮脂蠕形蟎（Demodex brevis）</strong>：生長在皮脂腺，尾巴尖如圓錐狀</li></ul>主要分布在臉部（鼻子附近、眼睫毛與眉毛附近），同一毛囊可發現高達6隻以上。<br><br><strong>超標9大症狀：</strong>毛孔粗大、皮膚呈結霜狀、皮膚呈粗糙砂紙樣、丘疹膿皰、肌膚增厚、膚色不均、毛孔性糠疹、皮膚泛紅、血管擴張`}
+];
+
+function findAnswer(q){
+  q=q.toLowerCase();
+  let best=0,found=null;
+  for(const item of KB){
+    let score=0;
+    for(const k of item.k){
+      if(q.includes(k.toLowerCase()))score+=k.length;
+    }
+    // also check title
+    const tw=item.t.split(/[\s，。、]+/);
+    for(const w of tw){
+      if(w.length>=2&&q.includes(w))score+=w.length*1.5;
+    }
+    if(score>best){best=score;found=item;}
+  }
+  return best>=2?found:null;
+}
+
+function setQ(t){document.getElementById('qi').value=t;document.getElementById('qi').focus()}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask()}}
+function reset(){document.getElementById('ac').classList.remove('visible');document.getElementById('qi').value='';document.getElementById('qi').focus()}
+
+function ask(){
+  const q=document.getElementById('qi').value.trim();
+  if(!q)return;
+  document.getElementById('qd').textContent='「'+q+'」';
+  document.getElementById('af').style.display='none';
+  document.getElementById('ans').innerHTML='<div class="loading-box"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-text">正在查詢講義內容⋯⋯</span></div>';
+  document.getElementById('ac').classList.add('visible');
+  setTimeout(()=>{
+    const r=findAnswer(q);
+    if(r){
+      document.getElementById('ans').innerHTML='<div class="answer-box"><h3>'+r.t+'</h3>'+r.a+'</div>';
+    }else{
+      document.getElementById('ans').innerHTML='<div class="out-of-scope">您詢問的「'+q+'」目前超出本講義的範圍，或關鍵字未能完全比對。<br><br>建議您：<ul><li>嘗試使用更精準的關鍵字，例如：「角質層」、「MTS微針」、「UVA」</li><li>點擊上方的常見主題按鈕快速查詢</li><li>向 EMI Beauty Academy 教學老師進一步詢問</li></ul></div>';
+    }
+    document.getElementById('af').style.display='flex';
+  },600);
+}
+</script>
+
+</div>
+
+<script>
+function checkPw(){
+  var v=document.getElementById('pwInput').value;
+  if(v==='Emi1920'){
+    document.getElementById('lockScreen').style.display='none';
+    document.getElementById('mainSystem').style.display='block';
+  } else {
+    document.getElementById('pwErr').textContent='密碼錯誤，請再試一次。';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+</script>
+
+<script>
+
+const KB=[
+{k:["皮膚結構","三層","表皮","真皮","皮下","皮膚組成","皮膚主要","主要結構","皮膚是"],t:"皮膚的主要三層結構",a:`皮膚是人體最大器官，面積約1.6–2㎡，重量佔體重約16%，厚度0.3–4mm，<strong>pH值約5.5（弱酸性）</strong>。<br><br>皮膚由三層組成：<ul><li><strong>表皮層</strong>：最外層，主要由角質細胞組成，沒有血管，不會流血，但有感覺神經末梢。</li><li><strong>真皮層</strong>：含汗腺、皮脂腺、毛囊、血管、神經、淋巴管，是皮膚的「運輸區」，佔皮膚總厚度約95%。</li><li><strong>皮下組織</strong>：主要由脂肪細胞組成，連接皮膚與肌肉，有儲存脂肪、減震、保溫功能。護膚品無法到達這一層。</li></ul>附屬物包括：毛囊、皮脂腺、汗腺和豎毛肌。`},
+{k:["皮膚功能","八大功能","保護作用","分泌作用","調溫","排泄","感知","合成","再生修復"],t:"皮膚的八大功能",a:`<ol><li><strong>保護作用</strong>：防外界刺激（機械、化學、微生物、紫外線），防止體內水分流失</li><li><strong>分泌作用</strong>：分泌皮脂和汗液，弱酸性皮脂防乾燥和抑菌</li><li><strong>調溫作用</strong>：熱時出汗降溫，冷時收縮立毛肌</li><li><strong>儲蓄作用</strong>：儲存皮下脂肪</li><li><strong>排泄作用</strong>：從汗腺排出體內廢物</li><li><strong>感知作用</strong>：觸覺、疼痛、溫度、瘙癢</li><li><strong>合成作用</strong>：合成膽固醇及Vitamin D3（經紫外線照射）</li><li><strong>再生修復作用</strong>：受傷時皮膚組織增殖修復</li></ol>`},
+{k:["角化","角質","週期","28天","更新","新陳代謝","基底層到角質層","角化過程","代謝"],t:"角化過程與皮膚更新週期",a:`角化過程是角質細胞從基底層出生，逐步移動到角質層並脫落的過程，整個週期約 <strong>28天</strong>。<ul><li>基底層 → 顆粒層：約14天</li><li>顆粒層 → 角質層脫落：約14天</li></ul>注意事項：<ul><li>老年人代謝週期更長</li><li>手掌和腳底約需45天</li><li>銀屑病（乾癬）患者的週期可短至4–5天</li><li>若代謝延遲，舊角質不易剝落，角質層變厚，保養品無法充分吸收</li></ul>`},
+{k:["表皮層","五層","角質層","透明層","顆粒層","有棘層","基底層","表皮結構","薄皮膚","厚皮膚","幾層"],t:"表皮層的五層結構",a:`表皮由五層組成（由外到內）：<ol><li><strong>角質層（Stratum Corneum）</strong>：最外層，10–20層扁平死細胞，厚度約0.02mm，含角蛋白、天然保濕因子（NMF）。兩大功能：防異物進入、保持水分不蒸發。</li><li><strong>透明層（Stratum Lucidum）</strong>：只存在於手掌和腳掌（厚皮膚），4–6層透明扁平死細胞，緩衝物理刺激、防微生物入侵。</li><li><strong>顆粒層（Stratum Granulosum）</strong>：2–5層，含神經醯胺，維持屏障功能，是有生命細胞→死角質細胞的第一階段。</li><li><strong>有棘層（Stratum Spinosum）</strong>：表皮中最厚（5–10層），含蘭格罕氏免疫細胞，有淋巴液供給表皮營養。</li><li><strong>基底層（Stratum Basale）</strong>：又稱生發層，細胞分裂活躍，含水量最高（約70%），每10個基底細胞有1個黑色素細胞。</li></ol><p style="font-size:12px;color:#9c8570">注意：多數教科書只列四層（不含透明層），透明層只在手掌腳掌出現。</p>`},
+{k:["基底層","生發層","黑色素細胞","Merkel","指紋","基底細胞","stratum basale"],t:"基底層（Stratum Basale）",a:`基底層又稱<strong>生發層</strong>，是表皮最深的一層：<ul><li>細胞分裂最活躍，不斷產生新細胞向上推移</li><li>細胞內含水量最高（約70%），水分由真皮血管供應</li><li>每10個基底細胞中有1個<strong>黑色素細胞（melanocyte）</strong>，分泌黑色素保護細胞核不受紫外線傷害</li><li>含<strong>Merkel細胞</strong>（觸覺受器，手腳表面特別多）</li><li>指紋的形成與真皮乳頭的皺摺有關，每人獨一無二，不會隨年老改變</li></ul>`},
+{k:["皮脂膜","sebum barrier","皮膜","酸鹼","屏障","皮膚屏障","受損","修復皮脂膜","去角質頻率","破壞皮脂膜"],t:"皮脂膜（Sebum Barrier）",a:`皮脂膜是覆蓋在角質層表面的保護膜（不是皮膚的結構），由<strong>皮脂（油分）＋汗液（水分）</strong>融合而成，pH約4.5–6.5（弱酸性）。<br><br><strong>皮脂膜受損的徵兆：</strong><ul><li>洗臉後乾澀、緊繃、粗糙</li><li>乾燥、搔癢、脫屑</li><li>嚴重時紅腫、敏感、發癢</li><li>過度刺激反而油脂旺盛，長痘痘粉刺</li></ul><strong>會破壞皮脂膜的行為：</strong><ul><li>①過度清潔（使用鹼性/泡沫豐富洗面乳）</li><li>②頻繁去角質</li><li>③年齡增長（25歲後皮脂膜逐漸變薄）</li><li>④忽略防曬（UVB直接破壞皮脂膜）</li><li>⑤護膚品使用不當（激素、鉛汞、鹼性產品）</li></ul><strong>各膚質去角質建議頻率：</strong><ul><li>中性肌：最多每月1次</li><li>乾性肌：最多每2個月1次</li><li>油性肌：最多每2星期1次</li><li>混合性肌：最多每2星期1次</li><li>敏感性肌：最好不要去角質</li></ul><strong>修復方法：</strong>選弱酸性清潔品、不過度去角質、避免酒精/香精/高溫熱水、做好防曬保濕，可用含<strong>角鯊烯、神經醯胺、洋甘菊</strong>的產品。`},
+{k:["真皮層","dermis","乳狀層","網狀層","真皮結構","膠原纖維","彈力纖維","纖維芽細胞","基質","真皮"],t:"真皮層的結構",a:`真皮層厚度約0.3–3mm，佔皮膚總厚度約95%，背部真皮最厚。<br><br>分為兩層：<ul><li><strong>乳狀層</strong>：膠原蛋白＋彈性蛋白形成鬆散網狀，含微血管、神經，負責表皮養分輸送。形成真皮乳頭（即指紋）。</li><li><strong>網狀層</strong>：緊密不規則組織，增加皮膚強韌性。年齡增大失去彈性時，產生深層皺紋。</li></ul><strong>真皮層關鍵成分：</strong><ul><li><strong>膠原蛋白</strong>：佔皮膚72%，真皮80%，鎖水支撐皮膚</li><li><strong>玻尿酸（HA）</strong>：2%可鎖住98%水分，隨年齡減少</li><li><strong>膠原纖維</strong>：維持皮膚張力與飽滿度</li><li><strong>彈力纖維</strong>：決定肌膚彈力和緊緻</li><li><strong>纖維芽細胞</strong>：合成膠原蛋白、彈性蛋白、玻尿酸</li><li><strong>基質</strong>：果凍狀，1g可容納6L水</li></ul>`},
+{k:["膠原蛋白","玻尿酸","透明質酸","HA","collagen","膠原","彈力蛋白"],t:"膠原蛋白與玻尿酸",a:`<strong>膠原蛋白（Collagen）</strong><ul><li>佔皮膚72%，真皮層80%是膠原蛋白</li><li>在皮膚中構成細密的彈力網，能鎖住水分，如支架般支撐皮膚</li><li>提供皮膚收縮強度，有修補組織的作用</li><li>與水結合保持皮膚水分</li></ul><strong>玻尿酸（透明質酸 HA）</strong><ul><li>學名透明質酸，是一種天然多醣體</li><li><strong>2%的玻尿酸可以鎖住98%的水分</strong></li><li>存在於真皮層，含量隨年齡增加而減少，導致肌膚乾燥老化</li><li>具有強大吸水作用，維持皮膚彈性</li></ul><strong>兩者差異：</strong>膠原蛋白主要提供支撐和結構，玻尿酸主要負責保濕鎖水。兩者共同維持皮膚的飽滿、緊緻和彈性。`},
+{k:["膚質","乾性","油性","中性","敏感","混合","膚質分類","皮膚類型","膚質判斷","如何保養"],t:"膚質分類與保養建議",a:`<strong>五種膚質特徵與保養：</strong><ul><li><strong>乾性肌</strong>：皮脂分泌少，易乾燥緊繃脫皮，黯淡無光，有黑斑皺紋，少痘痘。→ 溫和清潔＋補水保濕，最後用乳霜鎖水</li><li><strong>油性肌</strong>：皮脂分泌旺盛，毛孔粗大，易生痘痘粉刺，但不易有皺紋。→ 每天洗臉2–3次，油水平衡，避免刺激性食物</li><li><strong>中性肌</strong>：油水最平衡，最理想，多見於嬰幼兒及青春期前。→ 只需基礎清潔和保濕</li><li><strong>敏感性肌</strong>：易因外界刺激出現短暫紅腫、灼熱、緊繃、刺痛。→ 避開刺激成分，選天然植萃，查EWG分數</li><li><strong>混合性肌</strong>：T字出油＋兩頰乾燥。→ 分區保養，T字控油，兩頰加強保濕</li></ul>`},
+{k:["皮脂腺","皮脂","sebum","皮脂分泌","皮脂作用","皮脂腺作用","出油"],t:"皮脂腺與皮脂",a:`皮脂腺除手掌腳掌外幾乎遍布全身，頭面部最多。分泌受<strong>雄性激素和腎上腺皮質激素</strong>控制，青春期分泌活躍，35歲後逐漸減少。<br><br><strong>皮脂的三大作用：</strong><ul><li><strong>滋潤皮膚毛髮</strong>：離開皮脂的滋養，皮膚會變粗糙開裂，毛髮乾枯</li><li><strong>鎖住肌膚水分</strong>：在表皮形成乳化皮脂膜，防止水分過度蒸發</li><li><strong>殺菌</strong>：弱酸性皮脂抑制和殺滅皮膚表面細菌</li></ul>皮脂分泌過多 → 毛孔堵塞、痤瘡、脂漏性皮炎。皮脂分泌過少 → 皮膚乾燥、瘙癢、頭屑。`},
+{k:["黑頭","白頭","粉刺","皮脂管絲","開放性粉刺","閉鎖性粉刺","comedo","sebaceous"],t:"粉刺與皮脂管絲的分別",a:`<strong>皮脂管絲（Sebaceous Filaments）</strong><ul><li>呈透明、灰色或黃色</li><li>是皮脂腺的<strong>正常分泌物</strong>，位於毛囊深處</li><li>引導毛孔裡的油脂沿管道流動</li><li>通常<strong>不需積極治療</strong></li></ul><strong>黑頭粉刺（開放性粉刺）</strong><ul><li>明顯髒物堵在毛孔表面</li><li>黑色是接觸空氣氧化的黑，不是臉沒洗乾淨</li><li>除皮脂過多，還有角質代謝異常，需要治療</li></ul><strong>白頭粉刺（閉鎖性粉刺）</strong><ul><li>看不見開口，皮脂和角質堵塞毛孔</li><li>形成未氧化的白色堆積物</li></ul><p>很多人用黏膠撕拔的「條狀物」其實是皮脂管絲，並非黑頭粉刺。</p>`},
+{k:["痘痘","痤瘡","丘疹","膿包","囊腫","結節","痘痘形成","痘痘原因","痘痘種類","青春痘","長痘"],t:"痘痘的形成與種類",a:`<strong>痘痘形成的四個階段：</strong><ol><li><strong>皮脂分泌增多</strong>：雄性激素刺激皮脂腺增生，分泌過多皮脂</li><li><strong>毛囊口角化阻塞</strong>：毛囊開口角質異常，皮脂無法正常排出，形成脂栓（粉刺）</li><li><strong>痤瘡丙酸桿菌繁殖</strong>：毛孔缺氧，厭氧菌大量繁殖，分解油脂產生游離脂肪酸</li><li><strong>炎症反應</strong>：游離脂肪酸刺激毛囊周圍，出現紅腫、丘疹、膿皰</li></ol><strong>痘痘的種類：</strong><ul><li><strong>粉刺</strong>：毛囊被塞但未發炎（黑頭＝開放，白頭＝閉鎖）</li><li><strong>丘疹</strong>：無膿液的紅色小痘痘</li><li><strong>膿包</strong>：有膿液，容易留痘印，切勿擠壓</li><li><strong>囊腫</strong>：大顆硬，有明顯痛感，容易留疤</li><li><strong>結節</strong>：發炎深至真皮層，留疤率最高</li></ul>`},
+{k:["毛孔","毛孔粗大","毛孔類型","出油型","角質型","缺水型","老化型"],t:"毛孔粗大的四種類型",a:`<ol><li><strong>出油型毛孔</strong>：皮脂分泌旺盛撐大毛孔，呈U形擴大，常發生在T字出油部位。</li><li><strong>角質型毛孔</strong>：清潔不徹底，角質層肥厚阻塞，呈細小密集，常發生在鼻子和臉頰兩側，易有黑頭或閉鎖粉刺。</li><li><strong>缺水型毛孔</strong>：皮膚過乾使毛孔明顯，呈橢圓形擴大，常發生在臉頰兩側。</li><li><strong>老化型毛孔</strong>：膠原蛋白和彈力蛋白流失，地基鬆掉，毛孔呈水滴狀或長條狀，常發生在蘋果肌、法令紋附近。</li></ol>日曬是導致老化型毛孔的最大元兇。`},
+{k:["痘疤","痘印","凹洞","紅疤","褐疤","疤痕","凸疤","蟹足腫","痘坑"],t:"痘斑與痘疤",a:`<strong>紅疤</strong>：痘痘發炎過程過度血管擴張，痘痘好後仍持續呈現紅色。<br><strong>褐疤</strong>：發炎波及黑色素細胞，表皮或真皮黑色素增加，呈深色。<br><br>改善方法：做好防曬、使用美白產品或果酸煥膚療程。<br><br><strong>凹痘疤（萎縮型疤痕）</strong>：嚴重青春痘破壞真皮層，形成凹洞。類型：<ul><li>碟型（M型/波浪型）</li><li>車廂型（U型）</li><li>冰鑿型（V型）</li></ul><strong>凸痘疤</strong>：傷口過度增生，膠原蛋白累積過多向外凸起。嚴重者為蟹足腫，會擴散至附近區域。`},
+{k:["紫外線","UV","UVA","UVB","UVC","日曬","曬傷","曬黑","曬老","紫外線分別"],t:"紫外線 UVA / UVB / UVC",a:`<strong>UVA（320–400nm）= AGING（老化）</strong><ul><li>佔到達地面紫外線約90%</li><li>穿透力強，可深入<strong>真皮層</strong></li><li>導致曬黑、老化、斑點、皺紋、鬆弛</li><li>即使陰天或隔著窗玻璃仍然存在</li><li>累積性傷害，長期影響最大</li></ul><strong>UVB（280–320nm）= BURN（曬傷）</strong><ul><li>只到達<strong>表皮層</strong></li><li>造成即時曬傷、曬紅、脫皮、皮膚癌</li><li>曬紅作用是UVA的1000倍</li><li>可促進皮膚合成維生素D</li></ul><strong>UVC（100–280nm）</strong><ul><li>大部分被臭氧層阻隔，基本不到達地面</li><li>近年因臭氧層破壞，潛在風險逐漸增強</li></ul>`},
+{k:["防曬","SPF","PA","防曬霜","防曬指數","物理防曬","化學防曬","防曬成分","SPF意思","PA意思"],t:"防曬指數 SPF / PA 與防曬種類",a:`<strong>SPF（Sun Protection Factor）</strong>：針對UVB的防護<ul><li>數字2–50+，越高越強</li><li>SPF15＝阻擋14/15的UVB，延長15倍曬傷時間</li><li>SPF30＝阻擋29/30的UVB</li></ul><strong>PA（Protection Grade of UVA）</strong>：針對UVA的防護<ul><li>PA+＝延緩2–4倍曬黑時間</li><li>PA++＝延緩4–8倍</li><li>PA+++＝延緩8倍以上</li><li>PA++++＝最高防護（最多4個加號）</li></ul><strong>物理性防曬</strong>：成分為二氧化鈦（TiO2）、氧化鋅（ZnO），利用反射折射阻擋紫外線。優點：立即有效、不易致敏、適合敏感肌。缺點：容易泛白、質地偏厚。<br><br><strong>化學性防曬</strong>：吸收紫外線轉化為熱能。優點：質地輕透、適合油性肌。缺點：有滲入皮膚風險、可能刺激敏感肌。`},
+{k:["保養品成分","成分表","成分規則","INCI","EWG","防腐劑","乳化劑","增稠劑","活性成分","成分怎麼看","看成分"],t:"保養品成分表解讀",a:`<strong>成分表規則（法規要求）：</strong><ul><li>成分依含量由高到低排列</li><li>大於1%的成分必須照順序排列</li><li>小於1%的成分可在後面任意排列</li><li>著色劑不論多寡，都列在最後</li></ul><strong>常見成分類型：</strong><ol><li><strong>水</strong>：化妝水中佔比常達70%以上</li><li><strong>保濕劑</strong>：鎖水保濕，如甘油、玻尿酸</li><li><strong>油脂</strong>：天然（植物萃取）或合成（矽靈/礦物油）</li><li><strong>乳化劑</strong>：使油水混合穩定</li><li><strong>活性成分</strong>：美白、防曬、抗痘等功效性成分</li><li><strong>增稠劑</strong>：調節稠度</li><li><strong>安定劑/抗氧化劑</strong>：如維他命E</li><li><strong>防腐劑</strong>：如苯氧基乙醇、Parabens</li></ol><strong>重要標示符號：</strong><ul><li>PAO符號（如24M）：開封後可保存的月數</li><li>EWG分數：數字越小代表越安全</li><li>ECOCERT：有機產品認證</li></ul>`},
+{k:["功效成分","神仙組合","避雷","維C","視黃醇","煙醯胺","神經醯胺","水楊酸","果酸","角鯊烷","成分搭配","保養品成分種類"],t:"常見功效成分與搭配建議",a:`<strong>抗敏修復類：</strong>金盞花（鎮定消炎）、維生素B5/泛醇（止癢抗敏）、角鯊烷（修復屏障）、蝦青素（抗氧化）、神經醯胺（保護屏障）<br><br><strong>保濕補水類：</strong>馬齒莧（舒敏保濕）、輔酶Q10（抗氧保濕）、甘油（長效補水）、玻尿酸（補水保濕）、氨基酸（保濕鎖水）<br><br><strong>去痘控油類：</strong>壬二酸（抗炎祛痘）、水楊酸（剝脫角質、疏通毛孔）、尿囊素（祛痘修復）、果酸（淡斑祛痘）<br><br><strong>抗衰抗老類：</strong>視黃醇/維A、酵母（預防皺紋）、維E（延緩衰老）、胜肽（緊緻肌膚）<br><br><strong>✓ 神仙好組合：</strong><ul><li>煙醯胺＋視黃醇：美白亮膚</li><li>維C＋維E：雙重抗氧化</li><li>視黃醇＋玻尿酸：保濕抗老</li><li>視黃醇＋神經醯胺：強化去皺</li></ul><strong>✗ 避雷組合（不能混用）：</strong><ul><li>煙醯胺＋維C（高濃度）→ 可能產生煙酸刺激</li><li>酸性成分＋酸性成分 → 破壞肌膚屏障</li><li>蛋白質＋酒精 → 破壞蛋白質活性</li><li>煙醯胺＋強酸 → 刺激肌膚</li></ul>`},
+{k:["神經醯胺","ceramide","屏障成分","保濕成分"],t:"神經醯胺（Ceramide）",a:`神經醯胺是顆粒層和角質層中的重要脂質，是<strong>皮膚屏障功能的核心成分</strong>。<ul><li>形成細胞間脂質，將角質細胞牢固接合在一起</li><li>防止細胞內天然保濕因子（NMF）流失</li><li>維持皮膚保水能力</li><li>異位性皮膚炎患者皮膚屏障異常，現認為與神經醯胺減少有關</li><li>健康角質層含水量約20–30%，有賴神經醯胺的作用</li></ul>護膚品中含有神經醯胺，可修復肌膚屏障、保濕補水、抗衰，特別適合敏感肌和乾性肌使用。`},
+{k:["儀器","皮膚管理儀器","離子導入","超聲波","射頻","RF","小氣泡","注氧","冷導頭","熱噴","角質鏟","LED","光療","光譜儀","鱷魚夾","MTS儀器"],t:"皮膚管理儀器原理",a:`<ul><li><strong>冷導頭</strong>：低溫讓皮膚血管收縮，改善泛紅、舒緩皮膚</li><li><strong>射頻儀（RF）</strong>：無線電波打進皮膚，刺激膠原蛋白增生，緊緻皮膚</li><li><strong>角質鏟</strong>：震頻清除臉上老廢角質</li><li><strong>離子導入</strong>：微電流同極相斥異極相吸，促進有效成分滲透皮膚。適合液體劑型，乳液和霜狀類不帶電效果差</li><li><strong>鱷魚夾</strong>：生物微電流將面膜營養成分快速導入</li><li><strong>小氣泡</strong>：真空負壓，深層清潔毛孔老廢角質</li><li><strong>注氧儀</strong>：壓力將化妝水或精華變成細小噴霧，分子變小更易吸收</li><li><strong>MTS微針</strong>：微小針頭製作大量微細管道，促膠原蛋白增生，導入精華</li><li><strong>超聲波導入</strong>：每秒百萬次震動，保養成分震碎成更小分子帶到深層</li><li><strong>熱噴</strong>：打開毛孔，利於產品吸收和深層清潔</li></ul><strong>LED光療波長：</strong><ul><li>紅光660nm：改善微循環、緊緻、促細胞再生</li><li>黃光590nm：美白、抑黑色素、淡斑</li><li>藍光415nm：殺痘菌、控油、鎮定</li><li>綠光560nm：舒緩敏感肌</li><li>橘光610nm：促循環、加速代謝</li><li>紫光308nm：改善暗瘡、促修復</li></ul>`},
+{k:["MTS","微針","中胚層","微晶","Dr.Pen","Hydra Pen","出針","針深","藻針","海藻針","微針功效","微針注意"],t:"MTS 微針療法",a:`MTS（Microneedle Therapy System）又稱中胚層美容，利用微小針頭刺激皮膚，促進膠原蛋白增生，大幅提升活性成分滲透力（一般塗抹只有0.3%效果，MTS可製作200,000個微細管道）。<br><br><strong>出針深度建議：</strong><ul><li>0.25mm：日常護膚美白保濕</li><li>0.5–1.0mm：收縮毛孔、細紋、淡斑、紅血絲</li><li>1.0–1.5mm：痘痘肌、痘印</li><li>0.3–0.7mm：老化肌膚</li></ul><strong>施作後注意事項：</strong><ul><li>有針作法24小時不能洗臉（只能用食鹽水）</li><li>天天防曬＋做好保濕（修護面膜/修護霜）</li><li>兩周內不去角質、不做高溫、不擦酸、不做雷射</li><li>脫皮結痂讓自然脫落，不要撕</li><li>術後1–3天出現紅腫、脫皮、緊繃、粉刺均屬正常（正常肌膚3–7天修復，敏感肌7–10天）</li></ul><strong>禁忌族群：</strong>皮膚敏感、糖尿病、高血壓、孕婦、凝血疾病、蟹足腫體質、對金屬過敏。`},
+{k:["顧客服務","SOP","皮膚分析","問診","目診","觸診","接待","客戶","接客","標準流程"],t:"顧客服務 SOP 標準流程",a:`<strong>接待顧客五大標準流程：</strong>進行皮膚分析 → 觀察皮膚皮脂 → 判斷肌膚類型 → 分析皮膚問題 → 決定優先解決哪些問題<br><br><strong>皮膚分析三步驟：</strong><ol><li><strong>問診</strong>：職業、生活習慣、護膚習慣、使用哪些保養品、生理期、孕育期、過敏史、用藥、健康狀況、近期是否做過醫美</li><li><strong>目診</strong>：觀察痘痘、粉刺、紅血絲、斑點、毛孔粗大、暗沉、敏感等</li><li><strong>觸診</strong>：感受皮膚彈性、厚度、粗糙度</li></ol><strong>皮膚問題優先解決順序：</strong><ol><li>先解決皮膚敏感、發炎（激素臉）</li><li>再祛痘，之後改善痘坑、痘印、毛孔粗大</li><li>曬傷曬黑先改善曬傷，皮膚恢復健康後再做美白管理</li></ol>`},
+{k:["酒糟","玫瑰斑","rosacea","酒糟性皮膚炎","酒糟肌","紅血絲","紅斑","血管擴張"],t:"酒糟性皮膚炎（Rosacea）",a:`酒糟性皮膚炎又稱玫瑰斑、酒糟肌，是慢性皮膚發炎，主要為血管擴張及皮脂腺肥大。<br><br><strong>四期表現：</strong><ol><li>臉部偶發性紅斑，幾小時至幾天後褪去</li><li>微血管擴張，紅斑不再褪去（有點像紅斑性狼瘡）</li><li>出現丘疹、膿皰（類似青春痘，<strong>但不會有粉刺</strong>）</li><li>鼻子變大變形、眼睛乾澀視力模糊、水腫</li></ol><strong>常見惡化因子：</strong>過熱環境、陽光曝曬、熱飲（咖啡茶）、辣食、酒精、激烈運動、壓力、皮膚屏障受損<br><br><strong>8個預防撇步：</strong>防曬、降壓力、避免體溫過高、簡化保養、清淡飲食、避免過熱飲料、限制酒精攝取、避免皮膚吹風或寒冷環境`},
+{k:["接觸性皮膚炎","過敏","皮疹","濕疹","刺激性","光毒性","皮膚過敏"],t:"接觸性皮膚炎",a:`<strong>三種類型：</strong><ul><li><strong>刺激性</strong>：由刺激物質直接引起，反應發生在接觸部位</li><li><strong>過敏性</strong>：由致敏物質引起，可能擴散到接觸部位以外</li><li><strong>光毒性/光過敏性</strong>：物質接觸後暴露於紫外線產生反應</li></ul><strong>常見致敏物質：</strong>植物（毒藤）、橡膠/乳膠、抗菌藥、香水、防腐劑、鎳和鈷等金屬<br><br><strong>症狀：</strong>紅斑、瘙癢、丘疹、水皰；慢性者可能出現苔蘚化斑塊、結痂<br><br><strong>注意事項：</strong>沐浴水溫適中、選不含刺激性物質的清潔品、每週熱水清洗寢具、使用化學藥劑戴手套`},
+{k:["糖化","氧化","老化","AGE","自由基","抗老","肌老化","皮膚老化","抗糖化","抗氧化"],t:"肌膚老化——糖化與氧化",a:`<strong>糖化（Glycation）</strong>：過量的糖與體內蛋白質結合，產生AGE（晚期糖基化終產物），導致膠原蛋白劣化，出現皺紋、鬆弛、蠟黃暗沉。<br><br>如何抗糖化：不攝取過量糖份、多攝取預防糖化食物、先吃低升糖食物、良好睡眠品質、確實做好防曬<br><br><strong>氧化（Oxidation）</strong>：自由基攻擊皮膚細胞，導致斑點、皺紋、衰老。吸菸、空氣污染、紫外線、壓力都會增加自由基。<br><br>如何抗氧化：防止紫外線、進行適度運動、避免飲酒吸煙、補充抗氧化劑（維C、維E）、多吃抗氧化食物`},
+{k:["蠕形蟎蟲","蟎蟲","毛囊蟲","demodex","毛囊蠕形蟎","皮脂蠕形蟎"],t:"蠕形蟎蟲（Demodex Mites）",a:`蠕形蟎蟲是生長在毛囊皮脂腺的微小節肢動物，寄生在人體的有兩種：<ul><li><strong>毛囊蠕形蟎（Demodex folliculorum）</strong>：生長在毛囊，尾巴鈍如手指狀</li><li><strong>皮脂蠕形蟎（Demodex brevis）</strong>：生長在皮脂腺，尾巴尖如圓錐狀</li></ul>主要分布在臉部（鼻子附近、眼睫毛與眉毛附近），同一毛囊可發現高達6隻以上。<br><br><strong>超標9大症狀：</strong>毛孔粗大、皮膚呈結霜狀、皮膚呈粗糙砂紙樣、丘疹膿皰、肌膚增厚、膚色不均、毛孔性糠疹、皮膚泛紅、血管擴張`}
+];
+
+function findAnswer(q){
+  q=q.toLowerCase();
+  let best=0,found=null;
+  for(const item of KB){
+    let score=0;
+    for(const k of item.k){
+      if(q.includes(k.toLowerCase()))score+=k.length;
+    }
+    // also check title
+    const tw=item.t.split(/[\s，。、]+/);
+    for(const w of tw){
+      if(w.length>=2&&q.includes(w))score+=w.length*1.5;
+    }
+    if(score>best){best=score;found=item;}
+  }
+  return best>=2?found:null;
+}
+
+function setQ(t){document.getElementById('qi').value=t;document.getElementById('qi').focus()}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask()}}
+function reset(){document.getElementById('ac').classList.remove('visible');document.getElementById('qi').value='';document.getElementById('qi').focus()}
+
+function ask(){
+  const q=document.getElementById('qi').value.trim();
+  if(!q)return;
+  document.getElementById('qd').textContent='「'+q+'」';
+  document.getElementById('af').style.display='none';
+  document.getElementById('ans').innerHTML='<div class="loading-box"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-text">正在查詢講義內容⋯⋯</span></div>';
+  document.getElementById('ac').classList.add('visible');
+  setTimeout(()=>{
+    const r=findAnswer(q);
+    if(r){
+      document.getElementById('ans').innerHTML='<div class="answer-box"><h3>'+r.t+'</h3>'+r.a+'</div>';
+    }else{
+      document.getElementById('ans').innerHTML='<div class="out-of-scope">您詢問的「'+q+'」目前超出本講義的範圍，或關鍵字未能完全比對。<br><br>建議您：<ul><li>嘗試使用更精準的關鍵字，例如：「角質層」、「MTS微針」、「UVA」</li><li>點擊上方的常見主題按鈕快速查詢</li><li>向 EMI Beauty Academy 教學老師進一步詢問</li></ul></div>';
+    }
+    document.getElementById('af').style.display='flex';
+  },600);
+}
+
+
+// Override ask() to call Netlify Function
+async function ask(){
+  const q = document.getElementById('qi').value.trim();
+  if(!q) return;
+
+  document.getElementById('qd').textContent = '「' + q + '」';
+  document.getElementById('af').style.display = 'none';
+  document.getElementById('ans').innerHTML = '<div class="loading-box"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-text">AI 正在思考回答⋯⋯</span></div>';
+  document.getElementById('ac').classList.add('visible');
+
+  try {
+    const response = await fetch('/.netlify/functions/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ question: q })
+    });
+
+    const data = await response.json();
+    
+    if(data.error) throw new Error(data.error);
+    
+    const text = data.answer || '抱歉，暫時無法取得回覆。';
+
+    let html = text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^#{1,3}\s+(.+)$/gm, '<h3>$1</h3>');
+    
+    const lines = html.split('
+').map(line => {
+      line = line.trim();
+      if(!line) return '';
+      if(line.startsWith('<h3>')) return line;
+      if(line.match(/^[•\-\*]\s/)) return '<li>' + line.replace(/^[•\-\*]\s/, '') + '</li>';
+      if(line.match(/^\d+\.\s/)) return '<li>' + line.replace(/^\d+\.\s/, '') + '</li>';
+      return '<p>' + line + '</p>';
+    }).join('');
+
+    const formatted = html.replace(/(<li>.*?<\/li>\s*)+/gs, m => '<ul>' + m + '</ul>');
+
+    document.getElementById('ans').innerHTML = '<div class="answer-box">' + formatted + '</div>';
+
+  } catch(err) {
+    // Fallback to keyword search
+    const found = findAnswer(q);
+    if(found){
+      document.getElementById('ans').innerHTML = '<div class="answer-box"><h3>' + found.t + '</h3>' + found.a + '</div>';
+    } else {
+      document.getElementById('ans').innerHTML = '<div class="out-of-scope">目前無法連線 AI，也找不到符合的關鍵字。<br>請嘗試其他問法，或向老師詢問。</div>';
+    }
+  }
+
+  document.getElementById('af').style.display = 'flex';
+}
+</script>
+
+</body>
+</html>
